@@ -4,14 +4,20 @@ package com.cos.blog.test;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cos.blog.model.User;
@@ -23,6 +29,39 @@ public class DummyControllerTest {
 
 	@Autowired //의존성주입
 	private UserRepository ur ; 
+	
+	@DeleteMapping("dummy/user/{id}")
+	public String deleteUser(@PathVariable int id) {
+		
+		try {
+			ur.deleteById(id);
+		}catch(IllegalArgumentException e){
+			return "해당id는 잘못된 id입니다"+ id;
+		}catch(EmptyResultDataAccessException e){
+			return "존재dsf하지않는 id입니다.";
+		}
+		
+		
+		
+		return "삭제했씁니다. id : " + id;
+	}
+
+	@Transactional //더티체킹 영속성컨텍스트 체킹 변경감지
+	@PutMapping ("dummy/user/{id}")
+	public User updateUser(@PathVariable int id, @RequestBody User requestUser) {//메세지 컨버터의 JASON라이브러리가 JSON데이터를 -> 자바데이터로
+		System.out.println("id = " + id);
+		System.out.println("email = " + requestUser.getEmail());
+		System.out.println("password = " + requestUser.getPassword());
+		
+		User user = ur.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("수정에 실패했씁니다");
+		});
+		user.setEmail(requestUser.getEmail());
+		user.setPassword(requestUser.getPassword());
+		//merge
+		//ur.save(user);
+		return user; 
+	}
 	
 	//http://localhost:9090/blog/dummy/users
 	@GetMapping("dummy/users")

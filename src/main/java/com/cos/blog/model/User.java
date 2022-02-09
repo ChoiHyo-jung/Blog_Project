@@ -30,7 +30,7 @@ public class User {
 
 	private int id; //시퀀스
 	
-	@Column(nullable = false, length = 30)
+	@Column(nullable = false, length = 30, unique = true)
 	private String userName; //id
 	
 	@Column(nullable = false, length = 100)
