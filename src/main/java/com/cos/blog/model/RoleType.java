@@ -1,6 +1,6 @@
 package com.cos.blog.model;
 
-public enum RroleType {
+public enum RoleType {
 	
 	USER, ADMIN;
 

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cos.blog.model.User;
-import com.cos.blog.model.RroleType;
+import com.cos.blog.model.RoleType;
 import com.cos.blog.repository.UserRepository;
 
 @RestController 
@@ -104,7 +104,7 @@ public class DummyControllerTest {
 	@PostMapping("/first/test")
 	public String Join(User user) {
 		
-		user.setRole(RroleType.USER);
+		user.setRole(RoleType.USER);
 		
 		System.out.println("user id : " + user.getId());
 		System.out.println("user name : " + user.getUserName());
